@@ -30,7 +30,24 @@ public class GenerationCalculator {
 		boolean live = getCurrentGen().getCellStates()[i][j] == 1;
 		int neighbors = 0;
 
+		//count neighbors
 		
+		if (live) {
+			if (neighbors < 2) {
+				//dead
+			}
+			else if (neighbors == 2 || neighbors == 3) {
+				//lives
+			}
+			else {
+				//dies
+			}
+		}
+		else {
+			if (neighbors == 3) {
+				//set this position to live
+			}
+		}
 		
 		/*
 		Any live cell with fewer than two live neighbours dies, as if by underpopulation.
