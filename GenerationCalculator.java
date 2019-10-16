@@ -5,6 +5,7 @@ public class GenerationCalculator {
 
 	public GenerationCalculator(CellStateArray currentGen) {
 		this.currentGen = currentGen;
+		nextGen = null;
 		calculateNextGen();
 	}
 
@@ -18,45 +19,66 @@ public class GenerationCalculator {
 
 	public CellStateArray calculateNextGen() {
 		CellStateArray nextGen = new CellStateArray(false);
+		int[][] cellStates = new int[100][100];
+		int liveNeighbors;
+		boolean live;
+		for (int i = 0; i < currentGen.getCellStates().length; i++) {
+			for (int j = 0; j < currentGen.getCellStates()[0].length; j++) {
+				liveNeighbors = checkNeighbors(i, j);
+				live = getCurrentGen().getCellStates()[i][j] == 1;
+				if (live) {
+					if (liveNeighbors < 2) {
+						cellStates[i][j] = CellStateArray.DEAD;
+					} else if (liveNeighbors == 2 || liveNeighbors == 3) {
+						// nothing happens except it lives on
+					} else {
+						cellStates[i][j] = CellStateArray.DEAD;
+					}
+				} else {
+					if (liveNeighbors == 3) {
+						cellStates[i][j] = CellStateArray.ALIVE;
+					}
+				}
 
+				/*
+				 * Any live cell with fewer than two live neighbours dies, as if by
+				 * underpopulation. Any live cell with two or three live neighbours lives on to
+				 * the next generation. Any live cell with more than three live neighbours dies,
+				 * as if by overpopulation. Any dead cell with exactly three live neighbours
+				 * becomes a live cell, as if by reproduction.
+				 */
+			}
+		}
 
-		//make sure the array is toroidal
+		nextGen.setCellStates(cellStates);
 
 		this.nextGen = nextGen;
 		return nextGen;
 	}
 
-	private int checkNeighbors(int i, int j) {
-		boolean live = getCurrentGen().getCellStates()[i][j] == 1;
-		int neighbors = 0;
+	public int indexCheck(int index) {
+		if (index < 0) {
+			index = currentGen.getCellStates().length - 1;
+		} else if (index > currentGen.getCellStates().length - 1) {
+			index = 0;
+		}
+		return index;
+	}
 
-		//count neighbors
-		
-		if (live) {
-			if (neighbors < 2) {
-				//dead
-			}
-			else if (neighbors == 2 || neighbors == 3) {
-				//lives
-			}
-			else {
-				//dies
+	public int checkNeighbors(int l1, int l2) {
+		int liveNeighbors = 0;
+
+		for (int i = l1 - 1; i < l1 + 2; i++) {
+			for (int j = l2 - 1; j < l2 + 2; j++) {
+				if (i == l1 && j == l2) {
+					continue;
+				} else {
+					if (currentGen.getCellStates()[indexCheck(i)][indexCheck(j)] == 1) {
+						liveNeighbors++;
+					}
+				}
 			}
 		}
-		else {
-			if (neighbors == 3) {
-				//set this position to live
-			}
-		}
-		
-		/*
-		Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-	    Any live cell with two or three live neighbours lives on to the next generation.
-	    Any live cell with more than three live neighbours dies, as if by overpopulation.
-	    Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-		 */
-
-		//		currentGen.getCellStates()[i - 1][];
-		return 0;
+		return liveNeighbors;
 	}
 }
