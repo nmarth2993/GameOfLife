@@ -1,4 +1,3 @@
-
 public class GenerationCalculator {
 	private CellStateArray currentGen;
 	private CellStateArray nextGen;
@@ -21,35 +20,30 @@ public class GenerationCalculator {
 		CellStateArray nextGen = new CellStateArray(false);
 		int[][] cellStates = new int[100][100];
 		int liveNeighbors;
+		boolean live;
 		for (int i = 0; i < currentGen.getCellStates().length; i++) {
 			for (int j = 0; j < currentGen.getCellStates()[0].length; j++) {
 				liveNeighbors = checkNeighbors(i, j);
-				if (liveNeighbors == 2 || liveNeighbors == 3) {
-					cellStates[i][j] = CellStateArray.ALIVE;
-				} else {
+				live = currentGen.getCellStates()[i][j] == 1;
+				
+				
+				if (liveNeighbors < 2) {
 					cellStates[i][j] = CellStateArray.DEAD;
 				}
-
-				/*
-				 * if (liveNeighbors < 2) { cellStates[i][j] = CellStateArray.DEAD; } else if
-				 * (liveNeighbors == 2 || liveNeighbors == 3) { cellStates[i][j] =
-				 * CellStateArray.ALIVE; } else { cellStates[i][j] = CellStateArray.DEAD; }
-				 */
-
-//				if (live) {
-//					if (liveNeighbors < 2) {
-//						cellStates[i][j] = CellStateArray.DEAD;
-//					} else if (liveNeighbors == 2 || liveNeighbors == 3) {
-//						// nothing happens except it lives on
-//					} else {
-//						cellStates[i][j] = CellStateArray.DEAD;
-//					}
-//				} else {
-//					if (liveNeighbors == 3) {
-//						cellStates[i][j] = CellStateArray.ALIVE;
-//					}
-//				}
-
+				else if (liveNeighbors > 3) {
+					cellStates[i][j] = CellStateArray.DEAD;
+				}
+				else {
+					if (live) {
+						cellStates[i][j] = CellStateArray.ALIVE;
+					}
+					else {
+						if (liveNeighbors == 3) {
+							cellStates[i][j] = CellStateArray.ALIVE;
+						}
+					}
+				}
+				
 				/*
 				 * Any live cell with fewer than two live neighbours dies, as if by
 				 * underpopulation. Any live cell with two or three live neighbours lives on to
