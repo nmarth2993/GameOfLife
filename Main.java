@@ -12,9 +12,9 @@ public class Main {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		int[][] pattern = setPattern("glider");
+		int[][] pattern = setPattern("pentaD");
 
-		panel = new GamePanel(new CellStateArray(true));
+		panel = new GamePanel(new CellStateArray(pattern));
 		panel.setPreferredSize(new Dimension(400, 400));
 		panel.startUpdateThread();
 		panel.addMouseListener(new MListen());
@@ -66,6 +66,19 @@ public class Main {
 			grid[2][1] = CellStateArray.ALIVE;
 			grid[1][2] = CellStateArray.ALIVE;
 		}
+    else if (pattern.equals("pentaD")) {
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 8; j++) {
+          if (i == 1 && j == 1) {
+            continue;
+          }
+          if (i == 7 && j == 1) {
+            continue;
+          }
+          grid[45 + i][45 + j] = CellStateArray.ALIVE;
+        }
+      }
+    }
 		
 		return grid;
 	}
