@@ -4,6 +4,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class Main {
+	
 	JFrame frame;
 	GamePanel panel;
 
@@ -11,17 +12,9 @@ public class Main {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		int[][] a = new int[100][100];
-//		a[0][0] = 1;
-//		a[0][1] = 1;
-//		a[1][0] = 1;
-		// XXX: test data
-		a[0][2] = 1;
-		a[1][1] = 1;
-		a[1][3] = 1;
-		a[2][2] = 1;
+		int[][] pattern = setPattern("glider");
 
-		panel = new GamePanel(new CellStateArray(a));
+		panel = new GamePanel(new CellStateArray(true));
 		panel.setPreferredSize(new Dimension(400, 400));
 		panel.startUpdateThread();
 		panel.addMouseListener(new MListen());
@@ -30,6 +23,53 @@ public class Main {
 		frame.setVisible(true);
 	}
 
+	private int[][] setPattern(String pattern) {
+		int[][] grid = new int[100][100];
+		
+		if (pattern.equals("block")) {
+			grid[0][0] = CellStateArray.ALIVE;
+			grid[0][1] = CellStateArray.ALIVE;
+			grid[1][0] = CellStateArray.ALIVE;
+			grid[1][1] = CellStateArray.ALIVE;
+		}
+		else if (pattern.equals("beehive")) {
+			grid[0][1] = CellStateArray.ALIVE;
+			grid[1][0] = CellStateArray.ALIVE;
+			grid[2][1] = CellStateArray.ALIVE;
+			grid[0][2] = CellStateArray.ALIVE;
+			grid[2][0] = CellStateArray.ALIVE;
+			grid[1][3] = CellStateArray.ALIVE;
+		}
+		else if (pattern.equals("tub")) {
+			grid[0][2] = 1;
+			grid[1][1] = 1;
+			grid[1][3] = 1;
+			grid[2][2] = 1;
+		}
+		else if (pattern.equals("blinker")) {
+			grid[0][1] = CellStateArray.ALIVE;
+			grid[1][1] = CellStateArray.ALIVE;
+			grid[2][1] = CellStateArray.ALIVE;
+		}
+		else if (pattern.equals("toad")) {
+			grid[0][1] = CellStateArray.ALIVE;
+			grid[0][2] = CellStateArray.ALIVE;
+			grid[0][3] = CellStateArray.ALIVE;
+			grid[1][0] = CellStateArray.ALIVE;
+			grid[1][1] = CellStateArray.ALIVE;
+			grid[1][2] = CellStateArray.ALIVE;
+		}
+		else if (pattern.equals("glider")) {
+			grid[0][0] = CellStateArray.ALIVE;
+			grid[1][1] = CellStateArray.ALIVE;
+			grid[2][0] = CellStateArray.ALIVE;
+			grid[2][1] = CellStateArray.ALIVE;
+			grid[1][2] = CellStateArray.ALIVE;
+		}
+		
+		return grid;
+	}
+	
 	class MListen implements MouseListener {
 
 		@Override
