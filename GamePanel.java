@@ -6,7 +6,7 @@ public class GamePanel extends JPanel {
 
 	CellStateArray generation;
 	GenerationCalculator gc;
-
+	final static int TIME_INTERVAL = 500;
 	public final static int WIDTH = 4;
 	public final static int HEIGHT = 4;
 
@@ -31,7 +31,7 @@ public class GamePanel extends JPanel {
 		new Thread(() -> {
 			for (;;) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(TIME_INTERVAL);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

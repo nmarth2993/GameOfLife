@@ -20,6 +20,7 @@ public class CellStateArray {
 	}
 
 	public CellStateArray(int[][] array) {
+		cellStates = new int[100][100];
 		for (int i = 0; i < array.length; i++) {
 			for (int j = 0; j < array[0].length; j++) {
 				cellStates[i][j] = array[i][j];
