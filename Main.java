@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.awt.event.*;
 
 import javax.swing.*;
 
@@ -23,9 +24,36 @@ public class Main {
 		panel = new GamePanel(new CellStateArray(a));
 		panel.setPreferredSize(new Dimension(400, 400));
 		panel.startUpdateThread();
+		panel.addMouseListener(new MListen());
 		frame.setContentPane(panel);
 		frame.pack();
 		frame.setVisible(true);
+	}
+
+	class MListen implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			panel.setMouseDown(true);
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			panel.setMouseDown(false);
+		}
+
 	}
 
 	public void startUpdateGenerationThread() {

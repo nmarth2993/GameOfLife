@@ -10,6 +10,8 @@ public class GamePanel extends JPanel {
 	public final static int WIDTH = 4;
 	public final static int HEIGHT = 4;
 
+	private boolean mouseDown;
+
 	public GamePanel(CellStateArray gen) {
 		setGeneration(gen);
 		setGenerationCalculator(gen);
@@ -27,11 +29,15 @@ public class GamePanel extends JPanel {
 		return generation;
 	}
 
+	public void setMouseDown(boolean m) {
+		mouseDown = m;
+	}
+
 	public void startUpdateThread() {
 		new Thread(() -> {
 			for (;;) {
 				try {
-					Thread.sleep(TIME_INTERVAL);
+					Thread.sleep(mouseDown ? 100 : TIME_INTERVAL);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
