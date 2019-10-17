@@ -35,24 +35,17 @@ public class CellStateArray {
 		cellStates = states;
 	}
 
-	public static void main(String[] args) {
-		CellStateArray a = new CellStateArray(true);
-
-		for (int i = 0; i < a.getCellStates().length; i++) {
-			for (int j = 0; j < a.getCellStates()[0].length; j++) {
-				System.out.print(a.getCellStates()[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println("\n\n");
-		GenerationCalculator gc = new GenerationCalculator(a);
-		System.out.println(gc.checkNeighbors(1, 0));
-		CellStateArray b = gc.getNextGen();
-		for (int i = 0; i < b.getCellStates().length; i++) {
-			for (int j = 0; j < b.getCellStates()[0].length; j++) {
-				System.out.print(b.getCellStates()[i][j] + " ");
-			}
-			System.out.println();
-		}
-	}
+	/*
+	 * public static void main(String[] args) { CellStateArray a = new
+	 * CellStateArray(true);
+	 * 
+	 * for (int i = 0; i < a.getCellStates().length; i++) { for (int j = 0; j <
+	 * a.getCellStates()[0].length; j++) { System.out.print(a.getCellStates()[i][j]
+	 * + " "); } System.out.println(); } System.out.println("\n\n");
+	 * GenerationCalculator gc = new GenerationCalculator(a);
+	 * System.out.println(gc.checkNeighbors(1, 0)); CellStateArray b =
+	 * gc.getNextGen(); for (int i = 0; i < b.getCellStates().length; i++) { for
+	 * (int j = 0; j < b.getCellStates()[0].length; j++) {
+	 * System.out.print(b.getCellStates()[i][j] + " "); } System.out.println(); } }
+	 */
 }
