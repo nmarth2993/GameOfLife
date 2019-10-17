@@ -1,116 +1,88 @@
-import java.awt.Dimension;
-import java.awt.event.*;
+public class GenerationCalculator {
+	private CellStateArray currentGen;
+	private CellStateArray nextGen;
 
-import javax.swing.*;
-
-public class Main {
-	
-	JFrame frame;
-	GamePanel panel;
-
-	public Main() {
-		frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		int[][] pattern = setPattern("glider");
-
-		panel = new GamePanel(new CellStateArray(pattern));
-		panel.setPreferredSize(new Dimension(400, 400));
-		panel.startUpdateThread();
-		panel.addMouseListener(new MListen());
-		frame.setContentPane(panel);
-		frame.pack();
-		frame.setVisible(true);
+	public GenerationCalculator(CellStateArray currentGen) {
+		this.currentGen = currentGen;
+		nextGen = null;
+		calculateNextGen();
 	}
 
-	private int[][] setPattern(String pattern) {
-		int[][] grid = new int[100][100];
-		
-		if (pattern.equals("block")) {
-			grid[0][0] = CellStateArray.ALIVE;
-			grid[0][1] = CellStateArray.ALIVE;
-			grid[1][0] = CellStateArray.ALIVE;
-			grid[1][1] = CellStateArray.ALIVE;
-		}
-		else if (pattern.equals("beehive")) {
-			grid[0][1] = CellStateArray.ALIVE;
-			grid[1][0] = CellStateArray.ALIVE;
-			grid[2][1] = CellStateArray.ALIVE;
-			grid[0][2] = CellStateArray.ALIVE;
-			grid[2][0] = CellStateArray.ALIVE;
-			grid[1][3] = CellStateArray.ALIVE;
-		}
-		else if (pattern.equals("tub")) {
-			grid[0][2] = 1;
-			grid[1][1] = 1;
-			grid[1][3] = 1;
-			grid[2][2] = 1;
-		}
-		else if (pattern.equals("blinker")) {
-			grid[0][1] = CellStateArray.ALIVE;
-			grid[1][1] = CellStateArray.ALIVE;
-			grid[2][1] = CellStateArray.ALIVE;
-		}
-		else if (pattern.equals("toad")) {
-			grid[0][1] = CellStateArray.ALIVE;
-			grid[0][2] = CellStateArray.ALIVE;
-			grid[0][3] = CellStateArray.ALIVE;
-			grid[1][0] = CellStateArray.ALIVE;
-			grid[1][1] = CellStateArray.ALIVE;
-			grid[1][2] = CellStateArray.ALIVE;
-		}
-		else if (pattern.equals("glider")) {
-			grid[0][0] = CellStateArray.ALIVE;
-			grid[1][1] = CellStateArray.ALIVE;
-			grid[2][0] = CellStateArray.ALIVE;
-			grid[2][1] = CellStateArray.ALIVE;
-			grid[1][2] = CellStateArray.ALIVE;
-		}
-		
-		return grid;
-	}
-	
-	class MListen implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			panel.setMouseDown(true);
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			panel.setMouseDown(false);
-		}
-
+	public CellStateArray getCurrentGen() {
+		return currentGen;
 	}
 
-	public void startUpdateGenerationThread() {
-		new Thread(() -> {
-			for (;;) {
-				System.out.println("do something");
+	public CellStateArray getNextGen() {
+		return nextGen;
+	}
+
+	public CellStateArray calculateNextGen() {
+		CellStateArray nextGen = new CellStateArray(false);
+		int[][] cellStates = new int[100][100];
+		int liveNeighbors;
+		boolean live;
+		for (int i = 0; i < currentGen.getCellStates().length; i++) {
+			for (int j = 0; j < currentGen.getCellStates()[0].length; j++) {
+				liveNeighbors = checkNeighbors(i, j);
+				live = currentGen.getCellStates()[i][j] == 1;
+				
+				
+				if (liveNeighbors < 2) {
+					cellStates[i][j] = CellStateArray.DEAD;
+				}
+				else if (liveNeighbors > 3) {
+					cellStates[i][j] = CellStateArray.DEAD;
+				}
+				else {
+					if (live) {
+						cellStates[i][j] = CellStateArray.ALIVE;
+					}
+					else {
+						if (liveNeighbors == 3) {
+							cellStates[i][j] = CellStateArray.ALIVE;
+						}
+					}
+				}
+				
+				/*
+				 * Any live cell with fewer than two live neighbours dies, as if by
+				 * underpopulation. Any live cell with two or three live neighbours lives on to
+				 * the next generation. Any live cell with more than three live neighbours dies,
+				 * as if by overpopulation. Any dead cell with exactly three live neighbours
+				 * becomes a live cell, as if by reproduction.
+				 */
 			}
-		}).start();
+		}
+
+		nextGen.setCellStates(cellStates);
+
+		this.nextGen = nextGen;
+		return nextGen;
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
+	public int indexCheck(int index) {
+		if (index < 0) {
+			index = currentGen.getCellStates().length - 1;
+		} else if (index > currentGen.getCellStates().length - 1) {
+			index = 0;
+		}
+		return index;
+	}
 
-			JFrame.setDefaultLookAndFeelDecorated(true);
-			Main m = new Main();
+	public int checkNeighbors(int l1, int l2) {
+		int liveNeighbors = 0;
 
-		});
-
+		for (int i = l1 - 1; i < l1 + 2; i++) {
+			for (int j = l2 - 1; j < l2 + 2; j++) {
+				if (i == l1 && j == l2) {
+					continue;
+				} else {
+					if (currentGen.getCellStates()[indexCheck(i)][indexCheck(j)] == 1) {
+						liveNeighbors++;
+					}
+				}
+			}
+		}
+		return liveNeighbors;
 	}
 }
