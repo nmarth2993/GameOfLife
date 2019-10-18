@@ -4,7 +4,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class Main {
-	
+
 	JFrame frame;
 	GamePanel panel;
 
@@ -12,10 +12,10 @@ public class Main {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		int[][] pattern = setPattern("pentaD");
+		int[][] pattern = setPattern("glider");
 
-		panel = new GamePanel(new CellStateArray(pattern));
-		panel.setPreferredSize(new Dimension(400, 400));
+		panel = new GamePanel(new CellStateArray(true));
+		panel.setPreferredSize(new Dimension(400, 450));
 		panel.startUpdateThread();
 		panel.addMouseListener(new MListen());
 		frame.setContentPane(panel);
@@ -25,64 +25,58 @@ public class Main {
 
 	private int[][] setPattern(String pattern) {
 		int[][] grid = new int[100][100];
-		
+
 		if (pattern.equals("block")) {
 			grid[0][0] = CellStateArray.ALIVE;
 			grid[0][1] = CellStateArray.ALIVE;
 			grid[1][0] = CellStateArray.ALIVE;
 			grid[1][1] = CellStateArray.ALIVE;
-		}
-		else if (pattern.equals("beehive")) {
+		} else if (pattern.equals("beehive")) {
 			grid[0][1] = CellStateArray.ALIVE;
 			grid[1][0] = CellStateArray.ALIVE;
 			grid[2][1] = CellStateArray.ALIVE;
 			grid[0][2] = CellStateArray.ALIVE;
 			grid[2][0] = CellStateArray.ALIVE;
 			grid[1][3] = CellStateArray.ALIVE;
-		}
-		else if (pattern.equals("tub")) {
+		} else if (pattern.equals("tub")) {
 			grid[0][2] = 1;
 			grid[1][1] = 1;
 			grid[1][3] = 1;
 			grid[2][2] = 1;
-		}
-		else if (pattern.equals("blinker")) {
+		} else if (pattern.equals("blinker")) {
 			grid[0][1] = CellStateArray.ALIVE;
 			grid[1][1] = CellStateArray.ALIVE;
 			grid[2][1] = CellStateArray.ALIVE;
-		}
-		else if (pattern.equals("toad")) {
+		} else if (pattern.equals("toad")) {
 			grid[0][1] = CellStateArray.ALIVE;
 			grid[0][2] = CellStateArray.ALIVE;
 			grid[0][3] = CellStateArray.ALIVE;
 			grid[1][0] = CellStateArray.ALIVE;
 			grid[1][1] = CellStateArray.ALIVE;
 			grid[1][2] = CellStateArray.ALIVE;
-		}
-		else if (pattern.equals("glider")) {
+		} else if (pattern.equals("glider")) {
 			grid[0][0] = CellStateArray.ALIVE;
 			grid[1][1] = CellStateArray.ALIVE;
 			grid[2][0] = CellStateArray.ALIVE;
 			grid[2][1] = CellStateArray.ALIVE;
 			grid[1][2] = CellStateArray.ALIVE;
+		} else if (pattern.equals("pentaD")) {
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 8; j++) {
+					if (i == 1 && j == 1) {
+						continue;
+					}
+					if (i == 7 && j == 1) {
+						continue;
+					}
+					grid[45 + i][45 + j] = CellStateArray.ALIVE;
+				}
+			}
 		}
-    else if (pattern.equals("pentaD")) {
-      for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 8; j++) {
-          if (i == 1 && j == 1) {
-            continue;
-          }
-          if (i == 7 && j == 1) {
-            continue;
-          }
-          grid[45 + i][45 + j] = CellStateArray.ALIVE;
-        }
-      }
-    }
-		
+
 		return grid;
 	}
-	
+
 	class MListen implements MouseListener {
 
 		@Override
