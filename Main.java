@@ -1,7 +1,10 @@
 import java.awt.Dimension;
-import java.awt.event.*;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class Main {
 
@@ -12,12 +15,12 @@ public class Main {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		int[][] pattern = setPattern("glider");
+		int[][] pattern = setPattern("pentaD");
 
 		panel = new GamePanel(new CellStateArray(true));
 		panel.setPreferredSize(new Dimension(400, 450));
 		panel.startUpdateThread();
-		panel.addMouseListener(new MListen());
+		panel.addMouseListener(new MListen(panel.getPlayRectangle()));
 		frame.setContentPane(panel);
 		frame.pack();
 		frame.setVisible(true);
@@ -79,8 +82,24 @@ public class Main {
 
 	class MListen implements MouseListener {
 
+		Rectangle playRect;
+		Rectangle pauseRect;
+		
+		public MListen(Rectangle r) {
+			playRect = r;
+			pauseRect = new Rectangle((int) (r.getX() - 22), (int) (r.getY()), (int) (r.getWidth()), (int) (r.getHeight()));
+		}
+		
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			if (playRect.contains(e.getPoint())) {
+				panel.setPlaying(true);
+			}
+			else if (playRect.contains(e.getPoint())) {
+				panel.setPlaying(false);
+			}
+			System.out.println("clicked: " + e.getPoint());
+			System.out.println("r1: " + playRect);
 		}
 
 		@Override
@@ -103,20 +122,11 @@ public class Main {
 
 	}
 
-	public void startUpdateGenerationThread() {
-		new Thread(() -> {
-			for (;;) {
-				System.out.println("do something");
-			}
-		}).start();
-	}
-
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 
 			JFrame.setDefaultLookAndFeelDecorated(true);
 			Main m = new Main();
-
 		});
 
 	}
