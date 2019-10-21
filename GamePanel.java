@@ -65,6 +65,8 @@ public class GamePanel extends JPanel {
 				if (playing) {
 				generation = gc.calculateNextGen();
 				setGenerationCalculator(generation);
+				generationCount++;
+				}
 				for (int i = 0; i < generation.getCellStates().length; i++) {
 					for (int j = 0; j < generation.getCellStates()[0].length; j++) {
 						if (generation.getCellStates()[i][j] == CellStateArray.ALIVE) {
@@ -72,9 +74,7 @@ public class GamePanel extends JPanel {
 						}
 					}
 				}
-				generationCount++;
 				repaint();
-				}
 			}
 		}).start();
 	}
@@ -82,6 +82,8 @@ public class GamePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
+		FontMetrics fm;
+		
 		g2d.setColor(Color.BLACK);
 		
 		g2d.fillPolygon(new int[] {getWidth() - 20, getWidth() - 20, getWidth() - 10}, new int[] {30, 40, 35}, 3);
@@ -89,9 +91,25 @@ public class GamePanel extends JPanel {
 		g2d.fillRect(getWidth() - 35, 30, 3, 10);
 		
 		g2d.draw(getPlayRectangle());
+	
+		g2d.setFont(new Font("Arial", Font.BOLD, 12));
+		fm = g2d.getFontMetrics();
+		String state;
+		if (playing) {
+			state = "Playing";
+			if (mouseDown) {
+				state += " (25x)";
+			}
+			
+		}
+		else {
+			state = "Paused";
+		}
+
+		g2d.drawString(state, getWidth() - 20 -	fm.stringWidth(state), 15);
 		
 		g2d.setFont(new Font("Arial", Font.BOLD, 16));
-		FontMetrics fm = g2d.getFontMetrics();
+		fm = g2d.getFontMetrics();
 		g2d.drawString("Generation: " + generationCount, 10, 20);
 		g2d.drawString("Cells: " + cellCount, 20 + fm.stringWidth("Generation: " + generationCount), 20);
 		for (int i = 0; i < generation.getCellStates().length; i++) {

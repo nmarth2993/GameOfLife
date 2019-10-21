@@ -3,3 +3,5 @@
 /GamePanel.class
 /Main.class
 /Main$MListen.class
+*.class
+.vscode/

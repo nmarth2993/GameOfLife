@@ -95,11 +95,9 @@ public class Main {
 			if (playRect.contains(e.getPoint())) {
 				panel.setPlaying(true);
 			}
-			else if (playRect.contains(e.getPoint())) {
+			if (pauseRect.contains(e.getPoint())) {
 				panel.setPlaying(false);
 			}
-			System.out.println("clicked: " + e.getPoint());
-			System.out.println("r1: " + playRect);
 		}
 
 		@Override
